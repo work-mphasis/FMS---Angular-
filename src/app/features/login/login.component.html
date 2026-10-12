@@ -1,0 +1,25 @@
+<div class="login-page">
+  <form class="login-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="logo logo-lg">F</div>
+    <h2>{{ appName }}</h2>
+    <p class="muted">Admin sign in</p>
+
+    @if (error()) {
+      <div class="alert">{{ error() }}</div>
+    }
+
+    <div class="field">
+      <label>Username</label>
+      <input formControlName="username" autofocus />
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" formControlName="password" />
+    </div>
+
+    <button class="btn btn-primary btn-block" [disabled]="loading()">
+      {{ loading() ? 'Signing in...' : 'Sign in' }}
+    </button>
+  </form>
+</div>

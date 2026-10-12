@@ -1,0 +1,87 @@
+<app-navbar />
+
+<main class="container">
+  <div class="page-head">
+    <div>
+      <h1>Freshers</h1>
+      <p class="muted">{{ freshers().length }} total</p>
+    </div>
+    <button class="btn btn-primary" (click)="openAdd()">+ Add Fresher</button>
+  </div>
+
+  <input
+    class="search"
+    placeholder="Search by ID, name, email, technology or status..."
+    [value]="search()"
+    (input)="onSearch($event)"
+  />
+
+  <div class="card">
+    @if (loading()) {
+      <p class="empty">Loading...</p>
+    } @else if (error()) {
+      <p class="empty error-text">{{ error() }}</p>
+    } @else if (filtered().length === 0) {
+      <p class="empty">No freshers found.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Emp ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Technology</th>
+            <th>Joined</th>
+            <th>Status</th>
+            <th class="right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (f of filtered(); track f.id) {
+            <tr>
+              <td>{{ f.employeeId || '—' }}</td>
+              <td class="strong">{{ f.name }}</td>
+              <td>{{ f.email || '—' }}</td>
+              <td>{{ f.phone || '—' }}</td>
+              <td>{{ f.technology || '—' }}</td>
+              <td>{{ formatDate(f.joiningDate) }}</td>
+              <td>
+                @if (f.status) {
+                  <span class="badge {{ badgeClass(f.status) }}">{{ f.status }}</span>
+                } @else {
+                  —
+                }
+              </td>
+              <td class="right nowrap">
+                <button class="btn btn-sm btn-outline" (click)="openEdit(f)">Edit</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteTarget.set(f)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</main>
+
+@if (formOpen()) {
+  <app-modal [heading]="editing() ? 'Edit Fresher' : 'Add Fresher'" (closed)="closeForm()">
+    <app-fresher-form
+      [fresher]="editing()"
+      [saving]="saving()"
+      (formSave)="save($event)"
+      (formCancel)="closeForm()"
+    />
+  </app-modal>
+}
+
+@if (deleteTarget(); as target) {
+  <app-modal heading="Delete fresher?" (closed)="deleteTarget.set(null)">
+    <p>Are you sure you want to delete <b>{{ target.name }}</b>? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" (click)="deleteTarget.set(null)">Cancel</button>
+      <button class="btn btn-danger-solid" (click)="confirmDelete()">Delete</button>
+    </div>
+  </app-modal>
+}

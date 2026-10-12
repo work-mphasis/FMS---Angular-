@@ -1,0 +1,61 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="grid-2">
+    <div class="field">
+      <label>Employee ID *</label>
+      <input formControlName="employeeId" placeholder="EMP001" />
+      @if (showError('employeeId')) {
+        <small class="error-text">Employee ID is required</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Name *</label>
+      <input formControlName="name" placeholder="Arun Kumar" />
+      @if (showError('name')) {
+        <small class="error-text">Name is required</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input formControlName="email" placeholder="arun@company.com" />
+      @if (showError('email')) {
+        <small class="error-text">Enter a valid email</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Phone</label>
+      <input formControlName="phone" placeholder="9876543210" />
+      @if (showError('phone')) {
+        <small class="error-text">Enter 10 digits</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Technology</label>
+      <input formControlName="technology" placeholder="Java, Angular" />
+    </div>
+
+    <div class="field">
+      <label>Joining Date</label>
+      <input type="date" formControlName="joiningDate" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Status</label>
+    <select formControlName="status">
+      @for (s of statuses(); track s) {
+        <option [value]="s">{{ s }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="modal-actions">
+    <button type="button" class="btn btn-outline" (click)="formCancel.emit()">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="saving()">
+      {{ saving() ? 'Saving...' : 'Save' }}
+    </button>
+  </div>
+</form>
